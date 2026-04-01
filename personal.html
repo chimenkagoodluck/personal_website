@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chimenka Goodluck — Software Engineer & AI Researcher</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --cream:#FAF7F2;
+  --warm:#FFFDF9;
+  --sand:#EFE8DC;
+  --terra:#C4684F;
+  --terra-l:#EDCFC7;
+  --terra-d:#8B3A25;
+  --moss:#4E6040;
+  --moss-l:#D8E4CF;
+  --ink:#1A1815;
+  --ink-s:#3A3730;
+  --muted:#8A8278;
+  --border:rgba(100,80,60,0.13);
+  --purple-l:#EDE5F5;
+  --purple:#6B4FA0;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;
+}
+
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+/* ── NOISE CANVAS OVERLAY ── */
+#noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.03;}
+
+/* ── CURSOR ── */
+.cursor{
+  position:fixed;width:10px;height:10px;border-radius:50%;
+  background:var(--terra);pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width 0.2s,height 0.2s,opacity 0.2s;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;border-radius:50%;
+  border:1.5px solid var(--terra);pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);opacity:0.5;
+  transition:width 0.3s,height 0.3s,opacity 0.3s,border-color 0.3s;
+}
+.cursor.hover{width:6px;height:6px;}
+.cursor-ring.hover{width:50px;height:50px;opacity:0.3;border-color:var(--terra-d);}
+
+/* ── SCROLL PROGRESS ── */
+#progress{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--terra),var(--moss));
+  z-index:999;width:0%;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  background:rgba(250,247,242,0.92);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  padding:0 6vw;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+  transform:translateY(-100%);
+  transition:transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+nav.visible{transform:translateY(0);}
+.nav-logo{font-family:'Lora',serif;font-size:17px;font-weight:600;color:var(--terra);text-decoration:none;}
+.nav-links{display:flex;gap:36px;list-style:none;align-items:center;}
+.nav-links a{font-size:14px;font-weight:400;color:var(--ink-s);text-decoration:none;position:relative;padding-bottom:2px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--terra);transition:width 0.3s ease;}
+.nav-links a:hover::after{width:100%;}
+.nav-links a:hover{color:var(--terra);}
+.nav-cta{
+  background:var(--terra);color:white!important;
+  padding:8px 20px;border-radius:30px;
+  font-weight:500!important;font-size:13px!important;
+  transition:background 0.2s,transform 0.15s!important;
+}
+.nav-cta:hover{background:var(--terra-d)!important;transform:translateY(-1px);}
+.nav-cta::after{display:none!important;}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;
+  display:grid;grid-template-columns:1fr 370px;gap:60px;
+  align-items:center;padding:120px 6vw 80px;
+  max-width:1200px;margin:0 auto;position:relative;
+}
+
+/* Terminal typewriter */
+.hero-terminal{
+  background:var(--ink);border-radius:var(--r-md);
+  padding:18px 22px;margin-bottom:30px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  border:1px solid rgba(255,255,255,0.08);
+  max-width:480px;
+}
+.terminal-bar{display:flex;gap:7px;margin-bottom:14px;}
+.t-dot{width:11px;height:11px;border-radius:50%;}
+.t-r{background:#ff5f57;}.t-y{background:#febc2e;}.t-g{background:#28c840;}
+.terminal-line{color:rgba(255,255,255,0.5);line-height:1.8;}
+.terminal-line .prompt{color:#4ade80;}
+.terminal-line .cmd{color:#fff;}
+.terminal-line .out{color:#86efac;display:block;padding-left:16px;}
+.terminal-line .out.terra{color:var(--terra-l);}
+.cursor-blink{display:inline-block;width:7px;height:13px;background:var(--terra);vertical-align:middle;animation:blink 1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.hero-eyebrow{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:500;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--terra);margin-bottom:20px;
+}
+.hero-eyebrow .pip{width:6px;height:6px;border-radius:50%;background:var(--terra);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:0.6;}}
+
+.hero-name{
+  font-family:'Lora',serif;
+  font-size:clamp(48px,6.5vw,86px);
+  font-weight:600;line-height:1.01;
+  letter-spacing:-2px;color:var(--ink);margin-bottom:6px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.hero-name.in{opacity:1;transform:translateY(0);}
+.hero-name em{font-style:italic;color:var(--terra);}
+.hero-role{
+  font-size:clamp(14px,1.5vw,17px);font-weight:300;color:var(--muted);
+  margin-bottom:26px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.7s ease 0.15s,transform 0.7s ease 0.15s;
+}
+.hero-role.in{opacity:1;transform:translateY(0);}
+.hero-role strong{color:var(--moss);font-weight:500;}
+.hero-bio{
+  font-size:16px;color:var(--ink-s);max-width:490px;line-height:1.85;margin-bottom:36px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.7s ease 0.25s,transform 0.7s ease 0.25s;
+}
+.hero-bio.in{opacity:1;transform:translateY(0);}
+.hero-actions{
+  display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.7s ease 0.35s,transform 0.7s ease 0.35s;
+}
+.hero-actions.in{opacity:1;transform:translateY(0);}
+
+.btn{display:inline-flex;align-items:center;gap:7px;text-decoration:none;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;border-radius:36px;padding:12px 26px;white-space:nowrap;transition:background 0.2s,transform 0.15s,border-color 0.2s,color 0.2s;}
+.btn:hover{transform:translateY(-2px);}
+.btn-primary{background:var(--terra);color:white;}
+.btn-primary:hover{background:var(--terra-d);}
+.btn-ghost{background:transparent;color:var(--ink-s);border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--terra);color:var(--terra);}
+
+/* Hero right */
+.hero-photo-wrap{
+  position:relative;width:100%;aspect-ratio:4/5;
+  border-radius:var(--r-lg);overflow:hidden;
+  background:var(--sand);border:1px solid var(--border);margin-bottom:14px;
+  opacity:0;transform:translateX(30px);
+  transition:opacity 0.8s ease 0.2s,transform 0.8s ease 0.2s;
+}
+.hero-photo-wrap.in{opacity:1;transform:translateX(0);}
+.hero-photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-placeholder{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;color:var(--muted);
+  background:var(--sand);
+}
+.photo-placeholder p{font-size:13px;text-align:center;line-height:1.5;max-width:180px;}
+.hero-badge{
+  position:absolute;bottom:16px;left:16px;
+  background:rgba(250,247,242,0.94);backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:10px 14px;display:flex;align-items:center;gap:9px;
+}
+.badge-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;}
+.badge-text{font-size:12px;font-weight:500;color:var(--ink-s);}
+
+.hero-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.7s ease 0.5s,transform 0.7s ease 0.5s;
+}
+.hero-stats.in{opacity:1;transform:translateY(0);}
+.stat-box{
+  background:var(--warm);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:14px 10px;text-align:center;
+  transition:border-color 0.2s,transform 0.2s;
+}
+.stat-box:hover{border-color:var(--terra);transform:translateY(-2px);}
+.stat-num{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--terra);line-height:1;}
+.stat-label{font-size:10px;color:var(--muted);margin-top:4px;}
+
+/* ── FLOATING TECH TAGS ── */
+.floating-tags{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.7s ease 0.45s,transform 0.7s ease 0.45s;
+}
+.floating-tags.in{opacity:1;transform:translateY(0);}
+.ftag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--muted);
+  border:1px solid var(--border);
+  padding:4px 10px;border-radius:20px;background:var(--warm);
+  transition:border-color 0.2s,color 0.2s,background 0.2s;
+}
+.ftag:hover{border-color:var(--terra);color:var(--terra);background:var(--terra-l);}
+
+/* ── SECTION COMMONS ── */
+.section-wrap{padding:96px 6vw;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-tag{
+  font-size:11px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+}
+.section-tag::before{content:'';width:24px;height:1.5px;background:var(--terra);flex-shrink:0;}
+.section-h{
+  font-family:'Lora',serif;
+  font-size:clamp(28px,3.8vw,42px);font-weight:600;
+  color:var(--ink);letter-spacing:-1px;line-height:1.12;margin-bottom:10px;
+}
+.section-sub{font-size:15px;color:var(--muted);margin-bottom:50px;max-width:520px;}
+
+/* Reveal on scroll */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.reveal-left.in{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.reveal-right.in{opacity:1;transform:translateX(0);}
+
+/* ── AI TICKER ── */
+.ai-ticker-wrap{
+  background:var(--ink);overflow:hidden;padding:12px 0;
+  border-top:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.ai-ticker{
+  display:flex;gap:0;white-space:nowrap;
+  animation:ticker 30s linear infinite;
+}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ai-ticker span{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:rgba(255,255,255,0.35);padding:0 28px;
+}
+.ai-ticker span.hi{color:var(--terra-l);}
+
+/* ── ABOUT ── */
+#about{background:var(--warm);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.about-text{font-size:16px;color:var(--ink-s);line-height:1.85;}
+.about-text p+p{margin-top:16px;}
+.about-skills{margin-top:28px;display:flex;flex-direction:column;gap:12px;}
+.skill-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:var(--cream);border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  transition:border-color 0.2s,transform 0.2s;
+}
+.skill-row:hover{border-color:var(--terra);transform:translateX(4px);}
+.skill-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.si-terra{background:var(--terra-l);color:var(--terra-d);}
+.si-moss{background:var(--moss-l);color:var(--moss);}
+.si-purple{background:var(--purple-l);color:var(--purple);}
+.si-blue{background:#dbeafe;color:#1d4ed8;}
+.skill-name{font-size:14px;font-weight:500;color:var(--ink-s);flex:1;}
+.skill-bar-wrap{width:90px;height:4px;background:var(--sand);border-radius:4px;overflow:hidden;}
+.skill-bar{height:4px;border-radius:4px;background:var(--terra);width:0;transition:width 1s cubic-bezier(0.22,1,0.36,1);}
+.skill-bar.moss{background:var(--moss);}
+.skill-bar.purple{background:var(--purple);}
+.skill-bar.blue{background:#3b82f6;}
+
+.video-wrap{}
+.video-label{font-size:11px;font-weight:500;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.video-container{
+  width:100%;aspect-ratio:16/9;border-radius:var(--r-md);overflow:hidden;
+  background:var(--sand);border:1px solid var(--border);position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.video-container video{width:100%;height:100%;object-fit:cover;display:block;}
+.video-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;color:var(--muted);width:100%;height:100%;padding:24px;text-align:center;
+}
+.video-play-icon{
+  width:56px;height:56px;border-radius:50%;background:var(--terra);
+  display:flex;align-items:center;justify-content:center;color:white;
+  transition:transform 0.2s,background 0.2s;cursor:pointer;
+}
+.video-play-icon:hover{transform:scale(1.1);background:var(--terra-d);}
+.video-placeholder h4{font-family:'Lora',serif;font-size:17px;font-weight:600;color:var(--ink-s);}
+.video-placeholder p{font-size:13px;color:var(--muted);max-width:220px;line-height:1.6;}
+.video-placeholder small{font-size:11px;color:var(--muted);opacity:0.7;border:1px dashed var(--border);padding:5px 14px;border-radius:20px;}
+
+/* ── PROJECTS ── */
+#projects{background:var(--cream);}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.project-card{
+  background:var(--warm);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:24px;display:flex;flex-direction:column;
+  cursor:pointer;
+  transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;
+  opacity:0;transform:translateY(24px);
+}
+.project-card.in{opacity:1;transform:translateY(0);}
+.project-card:hover{border-color:var(--terra);transform:translateY(-4px);box-shadow:0 12px 32px rgba(196,104,79,0.12);}
+.project-card.wide{grid-column:span 2;}
+.proj-domain{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;margin-bottom:14px;width:fit-content;
+}
+.d-se{background:var(--terra-l);color:var(--terra-d);}
+.d-ai{background:var(--moss-l);color:var(--moss);}
+.d-cy{background:var(--purple-l);color:var(--purple);}
+.proj-title{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:10px;line-height:1.3;}
+.proj-desc{font-size:14px;color:var(--ink-s);line-height:1.75;margin-bottom:18px;flex:1;}
+.proj-stack{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.stack-pill{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;background:var(--sand);color:var(--ink-s);
+  border:1px solid var(--border);padding:3px 10px;border-radius:16px;
+  transition:background 0.2s,color 0.2s;
+}
+.project-card:hover .stack-pill{background:var(--terra-l);border-color:transparent;color:var(--terra-d);}
+.proj-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;}
+.proj-links{display:flex;gap:14px;}
+.proj-link{font-size:13px;font-weight:500;color:var(--terra);text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:color 0.2s,gap 0.2s;}
+.proj-link:hover{color:var(--terra-d);gap:7px;}
+.overview-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:500;color:var(--muted);
+  background:var(--sand);border:none;border-radius:20px;
+  padding:5px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:background 0.2s,color 0.2s;
+}
+.overview-btn:hover{background:var(--terra-l);color:var(--terra-d);}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(26,24,21,0);
+  display:none;align-items:center;justify-content:center;padding:24px;
+  transition:background 0.3s;
+}
+.modal-overlay.open{display:flex;background:rgba(26,24,21,0.65);}
+.modal{
+  background:var(--warm);border-radius:var(--r-lg);
+  width:100%;max-width:720px;max-height:90vh;overflow-y:auto;
+  border:1px solid var(--border);
+  transform:translateY(30px) scale(0.97);opacity:0;
+  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1),opacity 0.3s;
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);opacity:1;}
+.modal-top{
+  padding:28px 32px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  position:sticky;top:0;background:var(--warm);z-index:2;
+}
+.modal-close{
+  width:32px;height:32px;border-radius:50%;background:var(--sand);border:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);
+  transition:background 0.2s,color 0.2s,transform 0.2s;flex-shrink:0;
+}
+.modal-close:hover{background:var(--terra-l);color:var(--terra-d);transform:rotate(90deg);}
+.modal-body{padding:28px 32px 36px;}
+.modal-banner{
+  width:100%;height:160px;border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:24px;border:1px solid var(--border);
+}
+.mb-se{background:var(--terra-l);}
+.mb-ai{background:var(--moss-l);}
+.mb-cy{background:var(--purple-l);}
+.modal-banner-icon{color:var(--terra);}
+.mb-ai .modal-banner-icon{color:var(--moss);}
+.mb-cy .modal-banner-icon{color:var(--purple);}
+.modal-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.modal-kpi{background:var(--cream);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;text-align:center;}
+.modal-kpi-val{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--terra);}
+.modal-kpi-label{font-size:11px;color:var(--muted);margin-top:3px;}
+.modal-lbl{font-size:11px;font-weight:500;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.modal-desc{font-size:15px;color:var(--ink-s);line-height:1.8;margin-bottom:22px;}
+.modal-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;}
+.modal-pill{
+  font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--sand);
+  border:1px solid var(--border);color:var(--ink-s);padding:4px 12px;border-radius:16px;
+}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* ── RESEARCH ── */
+#research{background:var(--warm);}
+.research-list{display:flex;flex-direction:column;gap:12px;}
+.research-item{
+  background:var(--cream);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:22px 26px;
+  display:grid;grid-template-columns:48px 1fr auto;gap:18px;align-items:start;
+  transition:border-color 0.2s,transform 0.2s;
+}
+.research-item:hover{border-color:rgba(196,104,79,0.4);transform:translateX(4px);}
+.r-year{font-family:'Lora',serif;font-size:13px;font-weight:600;color:var(--terra);padding-top:2px;}
+.r-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.35;}
+.r-venue{font-size:13px;color:var(--muted);font-style:italic;margin-bottom:8px;}
+.r-abstract{font-size:14px;color:var(--ink-s);line-height:1.72;}
+.r-links{display:flex;gap:12px;margin-top:10px;}
+.r-link{font-size:13px;font-weight:500;color:var(--terra);text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:color 0.2s;}
+.r-link:hover{color:var(--terra-d);}
+.r-badge{font-size:11px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;padding:4px 13px;border-radius:20px;white-space:nowrap;align-self:flex-start;}
+.rb-pub{background:var(--moss-l);color:var(--moss);}
+.rb-pre{background:var(--sand);color:var(--muted);}
+.rb-prog{background:var(--terra-l);color:var(--terra-d);}
+
+/* ── GALLERY ── */
+#gallery{background:var(--cream);}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:14px;}
+.gallery-item{
+  border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border);
+  background:var(--sand);position:relative;
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.gallery-item:hover{transform:scale(1.02);box-shadow:0 16px 40px rgba(26,24,21,0.12);z-index:2;}
+.gallery-item.tall{grid-row:span 2;}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.gallery-placeholder{
+  width:100%;height:100%;min-height:200px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;color:var(--muted);padding:20px;text-align:center;
+}
+.gallery-item.tall .gallery-placeholder{min-height:420px;}
+.gallery-placeholder p{font-size:12px;line-height:1.5;max-width:140px;}
+.gallery-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(26,24,21,0.6);backdrop-filter:blur(8px);
+  padding:10px 14px;
+  transform:translateY(100%);transition:transform 0.3s;
+}
+.gallery-item:hover .gallery-caption{transform:translateY(0);}
+.gallery-caption span{font-size:12px;color:rgba(255,255,255,0.9);font-weight:500;display:block;}
+.gallery-caption p{font-size:11px;color:rgba(255,255,255,0.55);}
+
+/* ── BLOG ── */
+#blog{background:var(--warm);}
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.blog-card{
+  background:var(--cream);border:1px solid var(--border);
+  border-radius:var(--r-md);overflow:hidden;text-decoration:none;display:block;
+  transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;
+}
+.blog-card:hover{border-color:var(--terra);transform:translateY(-4px);box-shadow:0 12px 32px rgba(196,104,79,0.1);}
+.blog-thumb{height:140px;display:flex;align-items:center;justify-content:center;transition:transform 0.3s;}
+.blog-card:hover .blog-thumb{transform:scale(1.04);}
+.bt1{background:var(--terra-l);color:var(--terra-d);}
+.bt2{background:var(--moss-l);color:var(--moss);}
+.bt3{background:var(--purple-l);color:var(--purple);}
+.bt4{background:#fef9e7;color:#b7791f;}
+.bt5{background:#e0f0f7;color:#1a6a8a;}
+.bt6{background:var(--terra-l);color:var(--terra-d);}
+.blog-body{padding:18px 20px 22px;}
+.blog-meta{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.blog-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--ink);line-height:1.35;margin-bottom:9px;}
+.blog-excerpt{font-size:13px;color:var(--ink-s);line-height:1.68;}
+.blog-read{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:13px;font-weight:500;color:var(--terra);transition:gap 0.2s;}
+.blog-card:hover .blog-read{gap:8px;}
+
+/* ── CONTACT ── */
+#contact{background:var(--ink);}
+#contact .section-tag{color:rgba(255,255,255,0.35);}
+#contact .section-tag::before{background:var(--terra);}
+#contact .section-h{color:white;}
+#contact .section-sub{color:rgba(255,255,255,0.4);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.contact-blurb{font-size:16px;color:rgba(255,255,255,0.65);line-height:1.85;margin-bottom:28px;}
+.contact-channels{display:flex;flex-direction:column;gap:10px;}
+.c-channel{
+  display:flex;align-items:center;gap:14px;padding:13px 16px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);
+  border-radius:var(--r-sm);text-decoration:none;
+  transition:background 0.2s,border-color 0.2s,transform 0.2s;
+}
+.c-channel:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);transform:translateX(4px);}
+.c-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.09);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);flex-shrink:0;}
+.c-label{font-size:11px;color:rgba(255,255,255,0.38);letter-spacing:0.3px;}
+.c-value{font-size:14px;font-weight:500;color:rgba(255,255,255,0.82);}
+.contact-form{display:flex;flex-direction:column;gap:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.f-group{display:flex;flex-direction:column;gap:6px;}
+.f-group label{font-size:12px;color:rgba(255,255,255,0.42);letter-spacing:0.3px;}
+.f-group input,.f-group textarea,.f-group select{
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.11);
+  border-radius:10px;padding:12px 16px;color:white;
+  font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:vertical;width:100%;
+  -webkit-appearance:none;appearance:none;
+  transition:border-color 0.2s,background 0.2s;
+}
+.f-group input:focus,.f-group textarea:focus,.f-group select:focus{border-color:var(--terra);background:rgba(255,255,255,0.09);}
+.f-group input::placeholder,.f-group textarea::placeholder{color:rgba(255,255,255,0.22);}
+.f-group select option{background:#2a2622;color:white;}
+.btn-send{
+  background:var(--terra);color:white;border:none;
+  padding:13px 30px;border-radius:36px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;align-self:flex-start;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:background 0.2s,transform 0.15s;
+}
+.btn-send:hover{background:var(--terra-d);transform:translateY(-2px);}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);
+  padding:22px 6vw;display:flex;align-items:center;justify-content:space-between;
+}
+.foot-copy{font-size:13px;color:rgba(255,255,255,0.3);}
+.foot-copy em{font-family:'Lora',serif;font-style:italic;color:rgba(255,255,255,0.5);}
+.foot-links{display:flex;gap:20px;}
+.foot-links a{
+  font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;
+  display:inline-flex;align-items:center;gap:5px;
+  transition:color 0.2s,transform 0.2s;
+}
+.foot-links a:hover{color:rgba(255,255,255,0.75);transform:translateY(-2px);}
+
+/* ── MOBILE NAV ── */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--ink-s);transition:transform 0.3s,opacity 0.3s;}
+.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+.mobile-nav{
+  display:none;position:fixed;top:64px;left:0;right:0;z-index:190;
+  background:rgba(250,247,242,0.97);border-bottom:1px solid var(--border);
+  padding:20px 6vw;flex-direction:column;gap:4px;
+  transform:translateY(-10px);opacity:0;
+  transition:transform 0.3s,opacity 0.3s;
+}
+.mobile-nav.open{display:flex;transform:translateY(0);opacity:1;}
+.mobile-nav a{font-size:15px;color:var(--ink-s);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--border);transition:color 0.2s,padding-left 0.2s;}
+.mobile-nav a:last-child{border-bottom:none;}
+.mobile-nav a:hover{color:var(--terra);padding-left:6px;}
+
+/* ── PROJECTS SCROLL HINT ── */
+.proj-hint{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:white;
+  display:flex;align-items:center;gap:9px;
+  padding:11px 22px;border-radius:40px;
+  font-size:13px;font-weight:500;
+  box-shadow:0 8px 32px rgba(26,24,21,0.22);
+  opacity:0;pointer-events:none;z-index:400;
+  transition:opacity 0.35s,transform 0.35s;
+  white-space:nowrap;
+}
+.proj-hint.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.proj-hint i{color:var(--terra-l);}
+
+/* ── PUBLICATIONS ── */
+#publications{background:var(--warm);}
+.pub-tabs{
+  display:flex;gap:6px;margin-bottom:36px;flex-wrap:wrap;
+}
+.pub-tab{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:500;
+  padding:9px 20px;border-radius:30px;
+  border:1.5px solid var(--border);
+  background:transparent;color:var(--muted);
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:background 0.2s,color 0.2s,border-color 0.2s,transform 0.15s;
+}
+.pub-tab:hover{border-color:var(--terra);color:var(--terra);}
+.pub-tab.active{background:var(--terra);color:white;border-color:var(--terra);}
+.pub-tab.active:hover{background:var(--terra-d);border-color:var(--terra-d);}
+.pub-panel{display:none;}
+.pub-panel.active{display:block;}
+.pub-list{display:flex;flex-direction:column;gap:14px;}
+.pub-item{
+  background:var(--cream);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:20px 24px;
+  display:flex;align-items:flex-start;gap:18px;
+  transition:border-color 0.2s,transform 0.2s;
+}
+.pub-item:hover{border-color:var(--terra);transform:translateX(4px);}
+.pub-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.pi-blog{background:var(--terra-l);color:var(--terra-d);}
+.pi-stmt{background:var(--moss-l);color:var(--moss);}
+.pi-doc{background:var(--purple-l);color:var(--purple);}
+.pub-meta{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.pub-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--ink);line-height:1.35;margin-bottom:6px;}
+.pub-excerpt{font-size:13px;color:var(--ink-s);line-height:1.68;margin-bottom:10px;}
+.pub-link{
+  font-size:13px;font-weight:500;color:var(--terra);text-decoration:none;
+  display:inline-flex;align-items:center;gap:5px;
+  transition:color 0.2s,gap 0.2s;
+}
+.pub-link:hover{color:var(--terra-d);gap:8px;}
+.pub-badge{
+  font-size:10px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;margin-left:8px;vertical-align:middle;
+}
+.pb-new{background:var(--terra-l);color:var(--terra-d);}
+.pb-feat{background:var(--moss-l);color:var(--moss);}
+
+/* ── LINKEDIN ── */
+#linkedin{background:var(--cream);}
+.li-note{
+  background:var(--sand);border:1px solid var(--border);border-radius:var(--r-md);
+  padding:16px 20px;margin-bottom:32px;
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:13px;color:var(--ink-s);line-height:1.6;
+}
+.li-note i{color:var(--terra);flex-shrink:0;margin-top:2px;}
+.li-note code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--warm);padding:2px 7px;border-radius:5px;border:1px solid var(--border);}
+.li-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+.li-card{
+  background:var(--warm);border:1px solid var(--border);
+  border-radius:var(--r-md);overflow:hidden;
+  transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;
+}
+.li-card:hover{border-color:#0a66c2;transform:translateY(-3px);box-shadow:0 10px 28px rgba(10,102,194,0.1);}
+.li-card-head{
+  padding:16px 18px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.li-avatar{
+  width:38px;height:38px;border-radius:50%;background:#0a66c2;
+  display:flex;align-items:center;justify-content:center;color:white;
+  font-size:14px;font-weight:600;font-family:'Lora',serif;flex-shrink:0;
+}
+.li-name{font-size:14px;font-weight:500;color:var(--ink);}
+.li-handle{font-size:12px;color:var(--muted);}
+.li-logo{margin-left:auto;color:#0a66c2;opacity:0.7;}
+.li-embed-wrap{
+  position:relative;min-height:200px;background:var(--sand);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:24px;text-align:center;
+}
+.li-embed-wrap iframe{
+  width:100%;border:none;min-height:300px;display:block;
+}
+.li-placeholder-icon{color:var(--muted);opacity:0.35;}
+.li-placeholder-text{font-size:13px;color:var(--muted);max-width:220px;line-height:1.6;}
+.li-url-label{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--muted);background:var(--cream);border:1px solid var(--border);
+  border-radius:6px;padding:4px 10px;word-break:break-all;
+}
+.li-card-foot{
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--border);
+}
+.li-date{font-size:11px;color:var(--muted);}
+.li-open{
+  font-size:12px;font-weight:500;color:#0a66c2;text-decoration:none;
+  display:inline-flex;align-items:center;gap:4px;
+  transition:gap 0.2s;
+}
+.li-open:hover{gap:7px;}
+.li-cta{
+  margin-top:28px;text-align:center;padding:28px;
+  background:var(--warm);border:1px solid var(--border);border-radius:var(--r-md);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.li-cta p{font-size:15px;color:var(--ink-s);}
+.li-follow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#0a66c2;color:white;text-decoration:none;
+  padding:11px 24px;border-radius:30px;font-size:14px;font-weight:500;
+  transition:background 0.2s,transform 0.15s;
+}
+.li-follow:hover{background:#004182;transform:translateY(-2px);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  #hero{grid-template-columns:1fr;gap:48px;}
+  .hero-right{order:-1;display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;}
+  .hero-photo-wrap{aspect-ratio:3/4;}
+  .projects-grid{grid-template-columns:1fr 1fr;}
+  .project-card.wide{grid-column:span 2;}
+  .blog-grid{grid-template-columns:1fr 1fr;}
+  .contact-grid{grid-template-columns:1fr;gap:44px;}
+  .about-grid{grid-template-columns:1fr;}
+  .research-item{grid-template-columns:1fr;gap:8px;}
+  .r-badge{align-self:flex-start;}
+  .gallery-grid{grid-template-columns:1fr 1fr;}
+  .gallery-item.tall{grid-row:span 1;}
+  .gallery-item.tall .gallery-placeholder{min-height:200px;}
+  .li-grid{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  nav .nav-links{display:none;}
+  .hamburger{display:flex;}
+  #hero{padding:100px 4vw 60px;}
+  .section-wrap{padding:70px 4vw;}
+  .hero-right{grid-template-columns:1fr;}
+  .hero-photo-wrap{max-width:260px;margin:0 auto;}
+  .hero-stats{display:none;}
+  .projects-grid{grid-template-columns:1fr;}
+  .project-card.wide{grid-column:span 1;}
+  .blog-grid{grid-template-columns:1fr;}
+  .gallery-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .modal-top{padding:20px;}
+  .modal-body{padding:20px;}
+  .modal-kpis{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;gap:14px;text-align:center;}
+  .foot-links{justify-content:center;}
+  .cursor,.cursor-ring{display:none;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="noise"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="progress"></div>
+<div class="proj-hint" id="projHint">
+  <i data-lucide="layout-panel-left" width="14" height="14"></i>
+  Click <strong style="color:var(--terra-l);">Overview</strong> on any card to expand a project
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Chimenka Goodluck</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#linkedin">LinkedIn</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about" onclick="closeMobileNav()">About</a>
+  <a href="#projects" onclick="closeMobileNav()">Projects</a>
+  <a href="#research" onclick="closeMobileNav()">Research</a>
+  <a href="#publications" onclick="closeMobileNav()">Publications</a>
+  <a href="#linkedin" onclick="closeMobileNav()">LinkedIn</a>
+  <a href="#gallery" onclick="closeMobileNav()">Gallery</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section style="padding-top:64px;">
+<div id="hero">
+  <div class="hero-left">
+
+    <div class="hero-terminal reveal">
+      <div class="terminal-bar">
+        <div class="t-dot t-r"></div><div class="t-dot t-y"></div><div class="t-dot t-g"></div>
+      </div>
+      <div class="terminal-line">
+        <span class="prompt">chimenka@dev</span><span style="color:rgba(255,255,255,0.3);">:~$</span>
+        <span class="cmd"> whoami</span>
+        <span class="out">Chimenka Goodluck — Software Engineer &amp; AI Researcher</span>
+      </div>
+      <div class="terminal-line">
+        <span class="prompt">chimenka@dev</span><span style="color:rgba(255,255,255,0.3);">:~$</span>
+        <span class="cmd"> cat skills.txt</span>
+        <span class="out">[ SoftwareEngineering, Cybersecurity, MachineLearning, AI ]</span>
+      </div>
+      <div class="terminal-line">
+        <span class="prompt">chimenka@dev</span><span style="color:rgba(255,255,255,0.3);">:~$</span>
+        <span class="cmd"> git log --oneline -1</span>
+        <span class="out terra">a3f9c12  feat: shipped ThreatSense v2.0 🚀</span>
+      </div>
+      <div class="terminal-line">
+        <span class="prompt">chimenka@dev</span><span style="color:rgba(255,255,255,0.3);">:~$</span>
+        <span id="typeTarget" class="cmd"></span><span class="cursor-blink"></span>
+      </div>
+    </div>
+
+    <div class="hero-eyebrow">
+      <span class="pip"></span>
+      Open to collaboration &amp; opportunities
+    </div>
+    <h1 class="hero-name" id="heroName">Chimenka<br><em>Goodluck.</em></h1>
+    <p class="hero-role" id="heroRole">
+      <strong>Software Engineer</strong> &middot; Cybersecurity &middot; AI/ML Research
+    </p>
+    <p class="hero-bio" id="heroBio">
+      I build secure, intelligent systems at the intersection of software engineering, machine learning, and cybersecurity — with a deep curiosity for how technology shapes the world. Based in Lagos, working globally.
+    </p>
+    <div class="hero-actions" id="heroActions">
+      <a href="#projects" class="btn btn-primary">
+        <i data-lucide="folder-open" width="15" height="15"></i> View my work
+      </a>
+      <a href="resume.pdf" class="btn btn-ghost">
+        <i data-lucide="download" width="15" height="15"></i> Download CV
+      </a>
+    </div>
+    <div class="floating-tags" id="heroTags">
+      <span class="ftag">Python</span><span class="ftag">PyTorch</span>
+      <span class="ftag">Rust</span><span class="ftag">TypeScript</span>
+      <span class="ftag">Kubernetes</span><span class="ftag">OWASP</span>
+      <span class="ftag">Transformers</span><span class="ftag">FastAPI</span>
+      <span class="ftag">Go</span><span class="ftag">Docker</span>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-photo-wrap" id="heroPhoto">
+      <!-- Replace with: <img src="images/chimenka.jpg" alt="Chimenka Goodluck"> -->
+      <div class="photo-placeholder">
+        <i data-lucide="user" width="48" height="48" style="opacity:0.35;"></i>
+        <p>Your photo here<br><small>src="images/chimenka.jpg"</small></p>
+      </div>
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span class="badge-text">Available for work</span>
+      </div>
+    </div>
+    <div class="hero-stats" id="heroStats">
+      <div class="stat-box">
+        <div class="stat-num" data-target="12">0</div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" data-target="3">0</div>
+        <div class="stat-label">Papers</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" data-target="5">0</div>
+        <div class="stat-label">Yrs exp.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- AI TICKER -->
+<div class="ai-ticker-wrap">
+  <div class="ai-ticker" id="ticker"></div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="section-wrap" style="background:var(--warm);">
+  <div class="section-inner">
+    <div class="section-tag reveal">Who I am</div>
+    <h2 class="section-h reveal">About Me</h2>
+    <div class="about-grid">
+      <div class="reveal-left">
+        <div class="about-text">
+          <p>I'm Chimenka Goodluck, a software engineer and researcher with a deep passion for building secure, intelligent systems. I work at the intersection of software engineering, machine learning, and cybersecurity — fields that I believe are converging to define the future of technology.</p>
+          <p>My research focuses on adversarial robustness in machine learning, privacy-preserving computation, and AI-driven security tooling. I enjoy translating academic ideas into real-world tools that developers and security teams can actually use.</p>
+          <p>When I'm not writing code or reading papers, I'm contributing to open source and mentoring early-career engineers across Lagos and beyond.</p>
+        </div>
+        <div class="about-skills">
+          <div class="skill-row">
+            <div class="skill-icon si-terra"><i data-lucide="code-2" width="16" height="16"></i></div>
+            <span class="skill-name">Software Engineering</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-width="90"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-icon si-purple"><i data-lucide="shield" width="16" height="16"></i></div>
+            <span class="skill-name">Cybersecurity</span>
+            <div class="skill-bar-wrap"><div class="skill-bar purple" data-width="82"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-icon si-moss"><i data-lucide="brain" width="16" height="16"></i></div>
+            <span class="skill-name">AI / ML Research</span>
+            <div class="skill-bar-wrap"><div class="skill-bar moss" data-width="78"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-icon si-blue"><i data-lucide="cloud" width="16" height="16"></i></div>
+            <span class="skill-name">Cloud &amp; DevOps</span>
+            <div class="skill-bar-wrap"><div class="skill-bar blue" data-width="72"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="video-label">Introduction video</div>
+        <div class="video-container">
+          <!-- <video controls poster="images/poster.jpg"><source src="videos/intro.mp4" type="video/mp4"></video> -->
+          <div class="video-placeholder">
+            <div class="video-play-icon"><i data-lucide="play" width="22" height="22" style="margin-left:3px;"></i></div>
+            <h4>Introduction Video</h4>
+            <p>A short video of you introducing yourself and your work</p>
+            <small>Replace with your intro.mp4</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div id="projects" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-tag reveal">Selected work</div>
+    <h2 class="section-h reveal">Projects</h2>
+    <p class="section-sub reveal">Open-source tools, research prototypes, and production systems.</p>
+    <div class="projects-grid">
+
+      <div class="project-card wide"
+        data-title="ThreatSense" data-domain="ai" data-icon="brain"
+        data-long="ThreatSense is a production-grade intrusion detection system using a fine-tuned transformer model to classify network traffic in real time. Trained on CICIDS2017 and NSL-KDD datasets, it achieves 96.4% detection accuracy with sub-50ms inference latency. Ships as a CLI and REST API for easy SOC pipeline integration."
+        data-stack="Python,PyTorch,FastAPI,Docker,Scapy,Redis"
+        data-h1="96.4%" data-l1="Detection accuracy"
+        data-h2="&lt;50ms" data-l2="Inference latency"
+        data-h3="2 datasets" data-l3="Training data"
+        data-github="https://github.com" data-demo="#">
+        <span class="proj-domain d-ai"><i data-lucide="brain" width="11" height="11"></i> AI / ML</span>
+        <div class="proj-title">ThreatSense — Intelligent Threat Detection</div>
+        <div class="proj-desc">Real-time anomaly detection using transformer-based models to identify network intrusions with 96.4% accuracy. Deployed as a lightweight CLI and REST API for SOC integration.</div>
+        <div class="proj-stack">
+          <span class="stack-pill">Python</span><span class="stack-pill">PyTorch</span>
+          <span class="stack-pill">FastAPI</span><span class="stack-pill">Docker</span>
+          <span class="stack-pill">Scapy</span><span class="stack-pill">Redis</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="proj-link"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
+            <a href="#" class="proj-link"><i data-lucide="external-link" width="13" height="13"></i> Live demo</a>
+          </div>
+          <button class="overview-btn" onclick="openModal(this.closest('.project-card'))">
+            <i data-lucide="layout-panel-left" width="12" height="12"></i> Overview
+          </button>
+        </div>
+      </div>
+
+      <div class="project-card"
+        data-title="VaultAudit" data-domain="cy" data-icon="shield-check"
+        data-long="VaultAudit automates security auditing for web applications by running OWASP Top 10 checks, generating PDF reports, and integrating with CI/CD pipelines via GitHub Actions. Includes scheduled scans, Slack alerting, and a vulnerability history dashboard."
+        data-stack="Go,React,PostgreSQL,GitHub Actions,Docker"
+        data-h1="OWASP 10" data-l1="Checks covered"
+        data-h2="CI/CD" data-l2="Native integration"
+        data-h3="PDF" data-l3="Auto reports"
+        data-github="https://github.com">
+        <span class="proj-domain d-cy"><i data-lucide="shield" width="11" height="11"></i> Cybersecurity</span>
+        <div class="proj-title">VaultAudit</div>
+        <div class="proj-desc">Automated OWASP Top 10 security auditing, PDF reporting, and CI/CD integration via GitHub Actions.</div>
+        <div class="proj-stack">
+          <span class="stack-pill">Go</span><span class="stack-pill">React</span>
+          <span class="stack-pill">PostgreSQL</span><span class="stack-pill">GitHub Actions</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="proj-link"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
+          </div>
+          <button class="overview-btn" onclick="openModal(this.closest('.project-card'))">
+            <i data-lucide="layout-panel-left" width="12" height="12"></i> Overview
+          </button>
+        </div>
+      </div>
+
+      <div class="project-card"
+        data-title="DevFlow Orchestrator" data-domain="se" data-icon="git-branch"
+        data-long="Microservices management framework with a visual DAG editor, built-in OpenTelemetry tracing, and auto-scaling for AWS, GCP, and Azure. Developer-friendly CLI ensures local/production environment parity."
+        data-stack="TypeScript,Kubernetes,Redis,OpenTelemetry,Helm,React"
+        data-h1="Multi-cloud" data-l1="AWS · GCP · Azure"
+        data-h2="Visual DAG" data-l2="Pipeline editor"
+        data-h3="OTel" data-l3="Built-in tracing"
+        data-github="https://github.com" data-demo="#">
+        <span class="proj-domain d-se"><i data-lucide="code-2" width="11" height="11"></i> Software Eng.</span>
+        <div class="proj-title">DevFlow Orchestrator</div>
+        <div class="proj-desc">Visual microservices orchestration with DAG editor, built-in observability, and auto-scaling across AWS, GCP, and Azure.</div>
+        <div class="proj-stack">
+          <span class="stack-pill">TypeScript</span><span class="stack-pill">Kubernetes</span>
+          <span class="stack-pill">Redis</span><span class="stack-pill">Helm</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="proj-link"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
+            <a href="#" class="proj-link"><i data-lucide="book-open" width="13" height="13"></i> Docs</a>
+          </div>
+          <button class="overview-btn" onclick="openModal(this.closest('.project-card'))">
+            <i data-lucide="layout-panel-left" width="12" height="12"></i> Overview
+          </button>
+        </div>
+      </div>
+
+      <div class="project-card"
+        data-title="FedShield" data-domain="ai" data-icon="lock"
+        data-long="Federated learning framework with differential privacy guarantees (DP-SGD) and Byzantine-resilient aggregation. Enables malware classification across edge devices without exposing raw traffic data. Built on Flower (flwr) with a per-round training dashboard."
+        data-stack="Python,Flower,PyTorch,Differential Privacy,gRPC"
+        data-h1="DP-SGD" data-l1="Privacy guarantee"
+        data-h2="Byzantine" data-l2="Attack resilient"
+        data-h3="Edge-ready" data-l3="Deployment"
+        data-github="https://github.com">
+        <span class="proj-domain d-ai"><i data-lucide="brain" width="11" height="11"></i> AI / ML</span>
+        <div class="proj-title">FedShield</div>
+        <div class="proj-desc">Privacy-preserving federated learning with Byzantine fault tolerance for malware classification across edge devices.</div>
+        <div class="proj-stack">
+          <span class="stack-pill">Python</span><span class="stack-pill">Flower</span>
+          <span class="stack-pill">PyTorch</span><span class="stack-pill">gRPC</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="proj-link"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
+          </div>
+          <button class="overview-btn" onclick="openModal(this.closest('.project-card'))">
+            <i data-lucide="layout-panel-left" width="12" height="12"></i> Overview
+          </button>
+        </div>
+      </div>
+
+      <div class="project-card"
+        data-title="NetScan CLI" data-domain="cy" data-icon="terminal"
+        data-long="Terminal-first network scanner combining host discovery, port scanning, service fingerprinting, and CVE lookup into one scriptable Rust tool. Output formats: JSON, CSV, Markdown. Supports Lua plugins for protocol-specific probes and masscan-style speed tuning."
+        data-stack="Rust,Lua,SQLite,Masscan API"
+        data-h1="Native" data-l1="Rust performance"
+        data-h2="CVE" data-l2="Auto lookup"
+        data-h3="Lua" data-l3="Plugin support"
+        data-github="https://github.com">
+        <span class="proj-domain d-cy"><i data-lucide="shield" width="11" height="11"></i> Cybersecurity</span>
+        <div class="proj-title">NetScan CLI</div>
+        <div class="proj-desc">Rust-powered network recon tool with CVE lookup, service fingerprinting, and Lua plugin support for scriptable CI integration.</div>
+        <div class="proj-stack">
+          <span class="stack-pill">Rust</span><span class="stack-pill">Lua</span>
+          <span class="stack-pill">SQLite</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="proj-link"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
+          </div>
+          <button class="overview-btn" onclick="openModal(this.closest('.project-card'))">
+            <i data-lucide="layout-panel-left" width="12" height="12"></i> Overview
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- RESEARCH -->
+<div id="research" class="section-wrap" style="background:var(--warm);">
+  <div class="section-inner">
+    <div class="section-tag reveal">Academia</div>
+    <h2 class="section-h reveal">Research</h2>
+    <p class="section-sub reveal">Papers, preprints, and ongoing work in ML security and applied AI.</p>
+    <div class="research-list">
+
+      <div class="research-item reveal">
+        <div class="r-year">2024</div>
+        <div>
+          <div class="r-title">Adversarial Robustness of Graph Neural Networks in Intrusion Detection Systems</div>
+          <div class="r-venue">IEEE Symposium on Security &amp; Privacy (S&amp;P), 2024</div>
+          <div class="r-abstract">We analyse vulnerabilities in GNN-based IDS models under targeted adversarial perturbations and propose a certified defence mechanism achieving state-of-the-art robustness with minimal accuracy trade-off.</div>
+          <div class="r-links">
+            <a href="#" class="r-link"><i data-lucide="file-text" width="13" height="13"></i> PDF</a>
+            <a href="#" class="r-link"><i data-lucide="github" width="13" height="13"></i> Code</a>
+            <a href="#" class="r-link"><i data-lucide="presentation" width="13" height="13"></i> Slides</a>
+          </div>
+        </div>
+        <span class="r-badge rb-pub">Published</span>
+      </div>
+
+      <div class="research-item reveal">
+        <div class="r-year">2024</div>
+        <div>
+          <div class="r-title">Federated Learning for Privacy-Preserving Malware Classification in Edge Networks</div>
+          <div class="r-venue">arXiv:2403.12345 &middot; Under review at USENIX Security 2025</div>
+          <div class="r-abstract">A federated approach that trains malware classifiers across decentralised devices without exposing raw traffic data, achieving accuracy on par with centralised models under differential privacy constraints.</div>
+          <div class="r-links">
+            <a href="#" class="r-link"><i data-lucide="external-link" width="13" height="13"></i> arXiv</a>
+            <a href="#" class="r-link"><i data-lucide="github" width="13" height="13"></i> Code</a>
+          </div>
+        </div>
+        <span class="r-badge rb-pre">Preprint</span>
+      </div>
+
+      <div class="research-item reveal">
+        <div class="r-year">2023</div>
+        <div>
+          <div class="r-title">Efficient Attention Mechanisms for Real-Time Packet Classification</div>
+          <div class="r-venue">ACM CCS Workshop on ML for Cybersecurity, 2023</div>
+          <div class="r-abstract">We introduce SparseFlowAttn, a hardware-friendly attention variant optimised for classifying high-throughput network packets with sub-millisecond latency on consumer GPUs.</div>
+          <div class="r-links">
+            <a href="#" class="r-link"><i data-lucide="file-text" width="13" height="13"></i> PDF</a>
+            <a href="#" class="r-link"><i data-lucide="github" width="13" height="13"></i> Code</a>
+            <a href="#" class="r-link"><i data-lucide="video" width="13" height="13"></i> Talk</a>
+          </div>
+        </div>
+        <span class="r-badge rb-pub">Published</span>
+      </div>
+
+      <div class="research-item reveal">
+        <div class="r-year">2025</div>
+        <div>
+          <div class="r-title">LLM-Assisted Vulnerability Discovery in Large Codebases</div>
+          <div class="r-venue">In progress — targeting IEEE S&amp;P 2026</div>
+          <div class="r-abstract">Exploring how instruction-tuned large language models can be guided to surface security vulnerabilities in real-world repositories, reducing manual audit time by an order of magnitude.</div>
+        </div>
+        <span class="r-badge rb-prog">In progress</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div id="gallery" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-tag reveal">Visual</div>
+    <h2 class="section-h reveal">Gallery</h2>
+    <p class="section-sub reveal">Conferences, talks, workshops, and moments behind the work.</p>
+    <div class="gallery-grid">
+      <div class="gallery-item tall reveal">
+        <!-- <img src="images/gallery/talk.jpg" alt="Conference talk"> -->
+        <div class="gallery-placeholder">
+          <i data-lucide="image" width="32" height="32" style="opacity:0.35;"></i>
+          <p>Featured photo<br>(e.g. giving a talk)</p>
+        </div>
+        <div class="gallery-caption">
+          <span>IEEE S&amp;P 2024</span>
+          <p>Presenting adversarial robustness research</p>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <!-- <img src="images/gallery/workshop.jpg" alt="Workshop"> -->
+        <div class="gallery-placeholder">
+          <i data-lucide="image" width="28" height="28" style="opacity:0.35;"></i>
+          <p>Workshop / event photo</p>
+        </div>
+        <div class="gallery-caption"><span>AI Workshop, Lagos</span></div>
+      </div>
+      <div class="gallery-item reveal">
+        <!-- <img src="images/gallery/team.jpg" alt="Team"> -->
+        <div class="gallery-placeholder">
+          <i data-lucide="image" width="28" height="28" style="opacity:0.35;"></i>
+          <p>Team or collaboration photo</p>
+        </div>
+        <div class="gallery-caption"><span>Research team, 2024</span></div>
+      </div>
+      <div class="gallery-item reveal">
+        <!-- <img src="images/gallery/poster.jpg" alt="Poster"> -->
+        <div class="gallery-placeholder">
+          <i data-lucide="image" width="28" height="28" style="opacity:0.35;"></i>
+          <p>Poster session or demo</p>
+        </div>
+        <div class="gallery-caption"><span>ACM CCS 2023 — Poster</span></div>
+      </div>
+      <div class="gallery-item reveal">
+        <!-- <img src="images/gallery/hackathon.jpg" alt="Hackathon"> -->
+        <div class="gallery-placeholder">
+          <i data-lucide="image" width="28" height="28" style="opacity:0.35;"></i>
+          <p>Hackathon or community event</p>
+        </div>
+        <div class="gallery-caption"><span>HackLagos 2023</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLICATIONS -->
+<div id="publications" class="section-wrap" style="background:var(--warm);">
+  <div class="section-inner">
+    <div class="section-tag reveal">Writing &amp; Press</div>
+    <h2 class="section-h reveal">Publications</h2>
+    <p class="section-sub reveal">Blog posts, public statements, and authored documents — all in one place.</p>
+
+    <div class="pub-tabs reveal">
+      <button class="pub-tab active" onclick="switchTab('blog')">
+        <i data-lucide="pen-line" width="14" height="14"></i> Blog posts
+      </button>
+      <button class="pub-tab" onclick="switchTab('press')">
+        <i data-lucide="megaphone" width="14" height="14"></i> Public statements &amp; press
+      </button>
+      <button class="pub-tab" onclick="switchTab('docs')">
+        <i data-lucide="file-text" width="14" height="14"></i> Authored documents
+      </button>
+    </div>
+
+    <!-- BLOG POSTS -->
+    <div class="pub-panel active" id="panel-blog">
+      <div class="pub-list">
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-blog"><i data-lucide="search" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Mar 2025 &middot; Cybersecurity</div>
+            <div class="pub-title">How Adversarial ML is Changing the Threat Landscape <span class="pub-badge pb-new">New</span></div>
+            <div class="pub-excerpt">Modern attackers craft inputs specifically to fool detection models. Here's what that means for defenders in 2025 and how to respond.</div>
+            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-blog"><i data-lucide="git-merge" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Jan 2025 &middot; AI / ML</div>
+            <div class="pub-title">Building a Federated Learning Pipeline from Scratch</div>
+            <div class="pub-excerpt">A practical walkthrough of implementing FedAvg with differential privacy using Flower and PyTorch, from local setup to production deployment.</div>
+            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-blog"><i data-lucide="layout-grid" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Nov 2024 &middot; Engineering</div>
+            <div class="pub-title">Why Your Microservices Are Secretly Monoliths</div>
+            <div class="pub-excerpt">Distributed systems antipatterns I've encountered in production, and how to decompose them correctly this time.</div>
+            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-blog"><i data-lucide="key" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Sep 2024 &middot; Cybersecurity</div>
+            <div class="pub-title">Zero Trust Architecture: Beyond the Buzzword</div>
+            <div class="pub-excerpt">A grounded look at zero-trust in practice, with a reference implementation using SPIFFE/SPIRE and OPA.</div>
+            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-blog"><i data-lucide="bar-chart-2" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Jul 2024 &middot; AI / ML</div>
+            <div class="pub-title">Evaluating LLMs for Code Security Analysis</div>
+            <div class="pub-excerpt">I tested leading models against 200 real CVE-adjacent code snippets. Here's what the numbers actually say.</div>
+            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-blog"><i data-lucide="globe" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">May 2024 &middot; Career</div>
+            <div class="pub-title">Building a Research Career from Lagos</div>
+            <div class="pub-excerpt">Navigating academic publishing, remote collaboration, and global tech opportunities without leaving home.</div>
+            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUBLIC STATEMENTS & PRESS -->
+    <div class="pub-panel" id="panel-press">
+      <div class="pub-list">
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-stmt"><i data-lucide="megaphone" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Feb 2025 &middot; Press statement &middot; TechCabal</div>
+            <div class="pub-title">Statement on AI Safety and Responsible Deployment in African Tech Ecosystems <span class="pub-badge pb-feat">Featured</span></div>
+            <div class="pub-excerpt">A public statement on the responsibilities of AI practitioners and institutions operating within emerging tech markets, co-authored with colleagues from the Lagos AI Society.</div>
+            <a href="#" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Read statement</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-stmt"><i data-lucide="tv-2" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Oct 2024 &middot; Interview &middot; Techpoint Africa</div>
+            <div class="pub-title">Interview: "Cybersecurity is Not an Afterthought — It's Architecture"</div>
+            <div class="pub-excerpt">A conversation with Techpoint Africa on why security must be baked into software design from day one, and what that looks like for African startups building at speed.</div>
+            <a href="#" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Read interview</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-stmt"><i data-lucide="mic" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">Aug 2024 &middot; Panel statement &middot; Lagos Tech Fest</div>
+            <div class="pub-title">Opening Remarks: "The Future of AI Research in West Africa"</div>
+            <div class="pub-excerpt">Keynote remarks delivered at the Lagos Tech Fest 2024 panel on building sustainable AI research infrastructure outside traditional academic hubs.</div>
+            <a href="#" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Watch talk</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTHORED DOCUMENTS -->
+    <div class="pub-panel" id="panel-docs">
+      <div class="pub-list">
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-doc"><i data-lucide="file-text" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">2025 &middot; White paper &middot; PDF · 28 pages</div>
+            <div class="pub-title">Threat Modelling for AI-Augmented Systems: A Practitioner's Guide <span class="pub-badge pb-new">New</span></div>
+            <div class="pub-excerpt">A comprehensive white paper covering threat modelling methodologies adapted for systems that incorporate machine learning components — covering data poisoning, model inversion, and adversarial inputs.</div>
+            <a href="#" class="pub-link"><i data-lucide="download" width="13" height="13"></i> Download PDF</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-doc"><i data-lucide="book-open" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">2024 &middot; Technical report &middot; PDF · 14 pages</div>
+            <div class="pub-title">Benchmarking Open-Source IDS Tools Against Modern Adversarial Attacks</div>
+            <div class="pub-excerpt">A structured comparison of five widely used intrusion detection systems under adversarial conditions, with reproducible evaluation scripts and recommendations for practitioners.</div>
+            <a href="#" class="pub-link"><i data-lucide="download" width="13" height="13"></i> Download PDF</a>
+          </div>
+        </div>
+        <div class="pub-item reveal">
+          <div class="pub-icon pi-doc"><i data-lucide="clipboard-list" width="18" height="18"></i></div>
+          <div style="flex:1;">
+            <div class="pub-meta">2024 &middot; Policy brief &middot; PDF · 8 pages</div>
+            <div class="pub-title">Recommendations for AI Governance in Nigeria's Financial Sector</div>
+            <div class="pub-excerpt">A policy brief submitted to the Central Bank of Nigeria's fintech advisory group on responsible AI deployment, data localisation, and audit requirements for algorithmic systems.</div>
+            <a href="#" class="pub-link"><i data-lucide="download" width="13" height="13"></i> Download PDF</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LINKEDIN -->
+<div id="linkedin" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-tag reveal">Social</div>
+    <h2 class="section-h reveal">LinkedIn Posts</h2>
+    <p class="section-sub reveal">Thoughts, updates, and insights shared on LinkedIn.</p>
+
+    <div class="li-note reveal">
+      <i data-lucide="info" width="16" height="16"></i>
+      <span>To embed a real LinkedIn post, replace <code>YOUR_POST_URL</code> in each card with the post's full URL (e.g. <code>https://www.linkedin.com/posts/chimenkagoodluck_...</code>). LinkedIn does not offer a native embed — each card links directly to the post.</span>
+    </div>
+
+    <div class="li-grid">
+
+      <div class="li-card reveal">
+        <div class="li-card-head">
+          <div class="li-avatar">CG</div>
+          <div>
+            <div class="li-name">Chimenka Goodluck</div>
+            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+          </div>
+          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
+        </div>
+        <div class="li-embed-wrap">
+          <!-- To show the real post, uncomment the iframe below and set the src to your post URL -->
+          <!-- <iframe src="https://www.linkedin.com/embed/feed/update/YOUR_POST_ID" allowfullscreen></iframe> -->
+          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
+          <p class="li-placeholder-text">Paste your LinkedIn post URL here to embed it</p>
+          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-1</span>
+        </div>
+        <div class="li-card-foot">
+          <span class="li-date">Mar 2025</span>
+          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
+            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
+          </a>
+        </div>
+      </div>
+
+      <div class="li-card reveal">
+        <div class="li-card-head">
+          <div class="li-avatar">CG</div>
+          <div>
+            <div class="li-name">Chimenka Goodluck</div>
+            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+          </div>
+          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
+        </div>
+        <div class="li-embed-wrap">
+          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
+          <p class="li-placeholder-text">Paste your LinkedIn post URL here to embed it</p>
+          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-2</span>
+        </div>
+        <div class="li-card-foot">
+          <span class="li-date">Jan 2025</span>
+          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
+            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
+          </a>
+        </div>
+      </div>
+
+      <div class="li-card reveal">
+        <div class="li-card-head">
+          <div class="li-avatar">CG</div>
+          <div>
+            <div class="li-name">Chimenka Goodluck</div>
+            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+          </div>
+          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
+        </div>
+        <div class="li-embed-wrap">
+          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
+          <p class="li-placeholder-text">Paste your LinkedIn post URL here to embed it</p>
+          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-3</span>
+        </div>
+        <div class="li-card-foot">
+          <span class="li-date">Nov 2024</span>
+          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
+            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
+          </a>
+        </div>
+      </div>
+
+      <div class="li-card reveal">
+        <div class="li-card-head">
+          <div class="li-avatar">CG</div>
+          <div>
+            <div class="li-name">Chimenka Goodluck</div>
+            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+          </div>
+          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
+        </div>
+        <div class="li-embed-wrap">
+          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
+          <p class="li-placeholder-text">Paste your LinkedIn post URL here to embed it</p>
+          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-4</span>
+        </div>
+        <div class="li-card-foot">
+          <span class="li-date">Sep 2024</span>
+          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
+            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="li-cta reveal">
+      <p>See all posts and connect on LinkedIn</p>
+      <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-follow">
+        <i data-lucide="linkedin" width="16" height="16"></i> Follow on LinkedIn
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="section-wrap" style="background:var(--ink);">
+  <div class="section-inner">
+    <div class="section-tag reveal">Let's talk</div>
+    <h2 class="section-h reveal">Contact</h2>
+    <p class="section-sub reveal">Open to research collaborations, consulting, and full-time opportunities.</p>
+    <div class="contact-grid">
+      <div class="reveal-left">
+        <p class="contact-blurb">Whether you have an interesting problem, a research idea to explore, or just want to connect — my inbox is always open. I typically respond within 48 hours.</p>
+        <div class="contact-channels">
+          <a href="/cdn-cgi/l/email-protection#35565d5c58505b5e5475504d54584559501b565a58" class="c-channel">
+            <div class="c-icon"><i data-lucide="mail" width="16" height="16"></i></div>
+            <div><div class="c-label">Email</div><div class="c-value"><span class="__cf_email__" data-cfemail="2e4d4647434b40454f6e4b564f435e424b004d4143">[email&#160;protected]</span></div></div>
+          </a>
+          <a href="https://linkedin.com" target="_blank" class="c-channel">
+            <div class="c-icon"><i data-lucide="linkedin" width="16" height="16"></i></div>
+            <div><div class="c-label">LinkedIn</div><div class="c-value">/in/chimenkagoodluck</div></div>
+          </a>
+          <a href="https://github.com" target="_blank" class="c-channel">
+            <div class="c-icon"><i data-lucide="github" width="16" height="16"></i></div>
+            <div><div class="c-label">GitHub</div><div class="c-value">@chimenkagoodluck</div></div>
+          </a>
+          <a href="https://twitter.com" target="_blank" class="c-channel">
+            <div class="c-icon"><i data-lucide="twitter" width="16" height="16"></i></div>
+            <div><div class="c-label">X / Twitter</div><div class="c-value">@chimenkagoodluck</div></div>
+          </a>
+          <a href="https://scholar.google.com" target="_blank" class="c-channel">
+            <div class="c-icon"><i data-lucide="graduation-cap" width="16" height="16"></i></div>
+            <div><div class="c-label">Google Scholar</div><div class="c-value">Chimenka Goodluck</div></div>
+          </a>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="contact-form">
+          <div class="form-row">
+            <div class="f-group"><label>Name</label><input type="text" placeholder="Your name"></div>
+            <div class="f-group"><label>Email</label><input type="email" placeholder="you@email.com"></div>
+          </div>
+          <div class="f-group">
+            <label>Topic</label>
+            <select>
+              <option value="" disabled selected>What is this about?</option>
+              <option>Research collaboration</option>
+              <option>Consulting / freelance</option>
+              <option>Full-time opportunity</option>
+              <option>Open source contribution</option>
+              <option>Just saying hi</option>
+            </select>
+          </div>
+          <div class="f-group"><label>Message</label><textarea rows="6" placeholder="Tell me more…"></textarea></div>
+          <button class="btn-send"><i data-lucide="send" width="14" height="14"></i> Send message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="foot-copy">© 2025 <em>Chimenka Goodluck</em>. All rights reserved.</span>
+  <div class="foot-links">
+    <a href="#hero"><i data-lucide="arrow-up" width="13" height="13"></i> Top</a>
+    <a href="https://github.com" target="_blank"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
+    <a href="https://twitter.com" target="_blank"><i data-lucide="twitter" width="13" height="13"></i> Twitter</a>
+    <a href="/cdn-cgi/l/email-protection#5e3d3637333b30353f1e3b263f332e323b703d3133"><i data-lucide="mail" width="13" height="13"></i> Email</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+  <div class="modal" id="modal">
+    <div class="modal-top">
+      <div>
+        <div id="mDomain" class="proj-domain" style="margin-bottom:10px;"></div>
+        <div id="mTitle" style="font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" width="16" height="16"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="mBanner" class="modal-banner"><div id="mBannerIcon" class="modal-banner-icon"></div></div>
+      <div class="modal-kpis" id="mKpis"></div>
+      <div class="modal-lbl">About this project</div>
+      <p id="mDesc" class="modal-desc"></p>
+      <div class="modal-lbl">Tech stack</div>
+      <div id="mStack" class="modal-pills"></div>
+      <div id="mActions" class="modal-actions"></div>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Init icons ──
+lucide.createIcons();
+
+// ── Custom cursor ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.project-card,.gallery-item,.blog-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');ring.classList.add('hover');});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover');});
+});
+
+// ── Scroll progress ──
+const prog = document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct = window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  prog.style.width = pct+'%';
+});
+
+// ── Nav appear ──
+setTimeout(()=>document.getElementById('nav').classList.add('visible'),300);
+
+// ── Hero entrance ──
+setTimeout(()=>{
+  document.getElementById('heroName').classList.add('in');
+  document.getElementById('heroRole').classList.add('in');
+  document.getElementById('heroBio').classList.add('in');
+  document.getElementById('heroActions').classList.add('in');
+  document.getElementById('heroTags').classList.add('in');
+  document.getElementById('heroPhoto').classList.add('in');
+},400);
+setTimeout(()=>document.getElementById('heroStats').classList.add('in'),700);
+
+// ── Counter animation ──
+function animateCounter(el,target){
+  let start=0; const dur=1500; const step=16;
+  const inc=target/(dur/step);
+  const t=setInterval(()=>{
+    start+=inc; if(start>=target){start=target;clearInterval(t);}
+    el.textContent=Math.floor(start)+(target>10?'+':'');
+  },step);
+}
+let countersRun=false;
+function checkCounters(){
+  if(countersRun)return;
+  const stats=document.getElementById('heroStats');
+  if(!stats)return;
+  const rect=stats.getBoundingClientRect();
+  if(rect.top<window.innerHeight){
+    countersRun=true;
+    document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
+      animateCounter(el,parseInt(el.dataset.target));
+    });
+  }
+}
+window.addEventListener('scroll',checkCounters);
+setTimeout(checkCounters,1200);
+
+// ── Typewriter ──
+const phrases=['python train.py --epochs 50','cargo build --release','kubectl apply -f threatsense.yaml','git push origin main'];
+let pi=0,ci=0,typing=true;
+function typeStep(){
+  const target=document.getElementById('typeTarget');
+  if(!target)return;
+  if(typing){
+    target.textContent=' '+phrases[pi].slice(0,ci);
+    ci++;
+    if(ci>phrases[pi].length){typing=false;setTimeout(typeStep,1400);return;}
+    setTimeout(typeStep,55);
+  } else {
+    target.textContent=' '+phrases[pi].slice(0,ci);
+    ci--;
+    if(ci<0){typing=true;ci=0;pi=(pi+1)%phrases.length;setTimeout(typeStep,400);return;}
+    setTimeout(typeStep,28);
+  }
+}
+setTimeout(typeStep,900);
+
+// ── Ticker ──
+const tickerItems=[
+  {t:'Neural Networks',h:true},{t:'Adversarial ML',h:false},{t:'Federated Learning',h:true},
+  {t:'Zero Trust',h:false},{t:'OWASP Top 10',h:true},{t:'Transformers',h:false},
+  {t:'Differential Privacy',h:true},{t:'Kubernetes',h:false},{t:'Rust',h:true},
+  {t:'PyTorch',h:false},{t:'Intrusion Detection',h:true},{t:'DevOps',h:false},
+  {t:'GNNs',h:true},{t:'CVE Analysis',h:false},{t:'Microservices',h:true},
+];
+const tEl=document.getElementById('ticker');
+const row=tickerItems.map(i=>`<span class="${i.h?'hi':''}">${i.h?'[ ':''}${i.t}${i.h?' ]':''}</span>`).join('');
+tEl.innerHTML=row+row; // duplicate for infinite scroll
+
+// ── Noise canvas ──
+const canvas=document.getElementById('noise');
+const ctx=canvas.getContext('2d');
+function resizeNoise(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resizeNoise();
+window.addEventListener('resize',resizeNoise);
+function drawNoise(){
+  const img=ctx.createImageData(canvas.width,canvas.height);
+  for(let i=0;i<img.data.length;i+=4){
+    const v=Math.random()*255;
+    img.data[i]=img.data[i+1]=img.data[i+2]=v; img.data[i+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+  setTimeout(()=>requestAnimationFrame(drawNoise),120);
+}
+drawNoise();
+
+// ── Scroll reveal ──
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      // skill bars
+      e.target.querySelectorAll('.skill-bar[data-width]').forEach(b=>{
+        b.style.width=b.dataset.width+'%';
+      });
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.project-card,.research-item').forEach((el,i)=>{
+  if(el.classList.contains('project-card')) el.style.transitionDelay=(i%3)*0.08+'s';
+  observer.observe(el);
+});
+
+// ── Skill bar trigger when about section visible ──
+const aboutObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.skill-bar[data-width]').forEach(b=>{
+        b.style.width=b.dataset.width+'%';
+      });
+      aboutObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const aboutSection=document.getElementById('about');
+if(aboutSection) aboutObs.observe(aboutSection);
+
+// ── Modal ──
+const domainMap={
+  ai:{label:'AI / ML',cls:'d-ai',banner:'mb-ai',icon:'brain'},
+  cy:{label:'Cybersecurity',cls:'d-cy',banner:'mb-cy',icon:'shield'},
+  se:{label:'Software Eng.',cls:'d-se',banner:'mb-se',icon:'code-2'},
+};
+function openModal(card){
+  const d=card.dataset;
+  const dm=domainMap[d.domain];
+  document.getElementById('mTitle').textContent=d.title;
+  const domEl=document.getElementById('mDomain');
+  domEl.className='proj-domain '+dm.cls;
+  domEl.innerHTML=`<i data-lucide="${dm.icon}" width="11" height="11"></i> ${dm.label}`;
+  const banner=document.getElementById('mBanner');
+  banner.className='modal-banner '+dm.banner;
+  document.getElementById('mBannerIcon').innerHTML=`<i data-lucide="${d.icon||dm.icon}" width="52" height="52"></i>`;
+  document.getElementById('mKpis').innerHTML=`
+    <div class="modal-kpi"><div class="modal-kpi-val">${d.h1}</div><div class="modal-kpi-label">${d.l1}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-val">${d.h2}</div><div class="modal-kpi-label">${d.l2}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-val">${d.h3}</div><div class="modal-kpi-label">${d.l3}</div></div>`;
+  document.getElementById('mDesc').textContent=d.long;
+  document.getElementById('mStack').innerHTML=d.stack.split(',').map(s=>`<span class="modal-pill">${s.trim()}</span>`).join('');
+  let btns='';
+  if(d.github) btns+=`<a href="${d.github}" target="_blank" class="btn btn-primary" style="font-size:13px;padding:10px 22px;"><i data-lucide="github" width="14" height="14"></i> GitHub</a>`;
+  if(d.demo)   btns+=`<a href="${d.demo}" target="_blank" class="btn btn-ghost" style="font-size:13px;padding:9px 22px;"><i data-lucide="external-link" width="14" height="14"></i> Live demo</a>`;
+  document.getElementById('mActions').innerHTML=btns;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  lucide.createIcons();
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeOnOverlay(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ── Mobile nav ──
+function toggleMobileNav(){
+  document.getElementById('mobileNav').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+}
+function closeMobileNav(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+// ── Projects scroll hint ──
+const projHint = document.getElementById('projHint');
+const projSection = document.getElementById('projects');
+let hintDismissed = false;
+let hintTimer = null;
+function checkHint(){
+  if(hintDismissed) return;
+  const rect = projSection.getBoundingClientRect();
+  const inView = rect.top < window.innerHeight * 0.75 && rect.bottom > window.innerHeight * 0.1;
+  if(inView){
+    projHint.classList.add('show');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(()=>{
+      projHint.classList.remove('show');
+      hintDismissed = true;
+    }, 4500);
+  } else {
+    if(!projHint.classList.contains('show')) return;
+    projHint.classList.remove('show');
+  }
+}
+window.addEventListener('scroll', checkHint, {passive:true});
+projHint.addEventListener('click',()=>{
+  projHint.classList.remove('show');
+  hintDismissed = true;
+});
+
+// ── Publications tab switching ──
+function switchTab(tab){
+  document.querySelectorAll('.pub-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pub-panel').forEach(p=>p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const panel = document.getElementById('panel-'+tab);
+  panel.classList.add('active');
+  panel.querySelectorAll('.pub-item').forEach(el => observer.observe(el));
+  lucide.createIcons();
+}
+</script>
+</body>
+</html>
