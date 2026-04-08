@@ -1589,6 +1589,53 @@ footer{
   nav{padding:0 4vw;}
   .section-wrap{padding:48px 4vw;}
 }
+
+/* ── GALLERY — Fixed consistent sizes ── */
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+/* All items get a fixed height */
+.gallery-item{
+  height:240px;  /* base height for all items */
+}
+
+/* Tall item (first one) gets double */
+.gallery-item.tall{
+  grid-row:span 2;
+  height:494px;  /* 240 + 240 + 14px gap */
+}
+
+/* Images always fill the box — never overflow */
+.gallery-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+  display:block;
+}
+
+/* Placeholders match the same height */
+.gallery-placeholder{
+  width:100%;
+  height:100%;
+  min-height:unset; /* remove the old min-height */
+}
+.gallery-item.tall .gallery-placeholder{
+  min-height:unset;
+}
+
+/* Mobile */
+@media(max-width:960px){
+  .gallery-item.tall{ height:360px; grid-row:span 1; }
+  .gallery-item{ height:200px; }
+}
+@media(max-width:640px){
+  .gallery-grid{ grid-template-columns:1fr; }
+  .gallery-item, .gallery-item.tall{ height:220px; grid-row:span 1; }
+}
 </style>
 </head>
 <body>
@@ -1675,7 +1722,7 @@ footer{
 
     <div class="mnav-foot">
       <div class="mnav-socials">
-        <a href="https://github.com" target="_blank" class="mnav-social" aria-label="GitHub">
+        <a href="https://github.com/chimenkagoodluck" target="_blank" class="mnav-social" aria-label="GitHub">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
         </a>
         <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="mnav-social" aria-label="LinkedIn">
@@ -1684,7 +1731,7 @@ footer{
         <a href="https://twitter.com/chimenkagoodluck" target="_blank" class="mnav-social" aria-label="Twitter/X">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
         </a>
-        <a href="mailto:chimenka@example.com" class="mnav-social" aria-label="Email">
+        <a href="mailto:chimenkagoodluck@gmail.com" class="mnav-social" aria-label="Email">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
         </a>
       </div>
@@ -1731,7 +1778,8 @@ footer{
       <strong>Cybersecurity</strong> &middot; Software Engineer &middot; AI/ML Research
     </p>
     <p class="hero-bio" id="heroBio">
-      I build secure, intelligent systems at the intersection of software engineering, machine learning, and cybersecurity — with a deep curiosity for how technology shapes the world. Based in Lagos, working globally.
+      I am very happy that you visited my website. Feel free to explore and check out my projects, research and publications. If you have any questions or just want to say hi,
+       don't hesitate to reach out through the contact form in the footer of this website or through my email. My Curriculum Vitae is also available here should you need to review it.
     </p>
     <div class="hero-actions" id="heroActions">
       <a href="#projects" class="btn btn-primary">
@@ -1746,7 +1794,10 @@ footer{
       <span class="ftag">Rust</span><span class="ftag">TypeScript</span>
       <span class="ftag">Kubernetes</span><span class="ftag">OWASP</span>
       <span class="ftag">Transformers</span><span class="ftag">FastAPI</span>
-      <span class="ftag">Go</span><span class="ftag">Docker</span>
+      <span class="ftag">C++</span><span class="ftag">Docker</span>
+      <span class="ftag">Adversarial ML</span><span class="ftag">Red Teaming</span>
+      <span class="ftag">Threat Intelligence</span><span class="ftag">AI Safety</span>
+      <span class="ftag">Vulnerability Research</span><span class="ftag">Cloud Security</span>
     </div>
   </div>
 
@@ -1755,7 +1806,7 @@ footer{
       <img src="images/WhatsApp Image 2026-03-10 at 9.08.14 AM.jpeg" alt="Chimenka Goodluck — Clifford University graduation" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
       <div class="hero-badge">
         <span class="badge-dot"></span>
-        <span class="badge-text">Available for collaboration</span>
+        <span class="badge-text">Available for collaboration and research</span>
       </div>
     </div>
     <div class="hero-stats" id="heroStats">
@@ -2207,11 +2258,11 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
     <div class="gallery-grid" id="galleryGrid">
 
       <div class="gallery-item tall reveal" data-index="0"
-        data-src="images/WhatsApp Image 2026-04-06 at 9.27.59 PM (2).jpeg"
-        data-caption="IEEE S&amp;P 2024"
-        data-sub="Presenting adversarial robustness research"
+        data-src="images/speaking.jpeg"
+        data-caption="Our visit to the  President (Vice Chancellor) of Clifford University with members of NACOS executives &amp;P 2024"
+        data-sub="Presenting our project and research to the Vice Chancellor and university executives during the Nigeria Association of Computing Students(NACOS)&amp;P 2024 conference in April 2024"
         onclick="openLightbox(0)">
-        <img src="images/WhatsApp Image 2026-04-06 at 9.27.59 PM (2).jpeg"
+        <img src="images/speaking.jpeg"
           alt="Conference talk 2024"
           style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -2219,50 +2270,69 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
           <p>Featured photo<br><small>src="images/..."</small></p>
         </div>
-        <div class="gallery-caption"><span>IEEE S&amp;P 2024</span><p>Presenting adversarial robustness research</p></div>
+        <div class="gallery-caption"><span>NACOS Research &amp; Conference 2024</span><p>Presenting our proposed AI research projects to the President(Vice Chancellor) of Clifford University</p></div>
       </div>
 
       <div class="gallery-item reveal" data-index="1"
-        data-src="images/gallery-workshop.jpg"
-        data-caption="AI Workshop, Lagos"
-        data-sub="Community AI session, 2024"
+        data-src="images/nacosconference.jpeg"
+        data-caption="The delegates from my University ably led by me taking a group picture with the National President of NACOS at NACOS convention in Enugu, Nigeria"
+        data-sub="NACOS Convention, 2025 — A group picture with the National President of NACOS at the convention in Enugu, Nigeria"
         onclick="openLightbox(1)">
+        <img src="images/nacosconference.jpeg"
+          alt="Conference talk 2024"
+          style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="gallery-placeholder">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-          <p>Workshop photo</p>
+          <p>The delegates from my University ably led by me taking a group picture with the National President of NACOS at NACOS convention in Enugu, Nigeria</p>
         </div>
-        <div class="gallery-caption"><span>AI Workshop, Lagos</span></div>
+        <div class="gallery-caption"><span> The delegates from my University ably led by me taking a group picture with the National President of NACOS at NACOS convention in Enugu, Nigeria</span></div>
       </div>
 
       <div class="gallery-item reveal" data-index="2"
-        data-src="images/gallery-team.jpg"
-        data-caption="Research Team, 2024"
-        data-sub="With colleagues at Clifford University"
+        data-src="images/institutional_award.jpeg"
+        data-caption="A picture of me with the Institutional Appreciation Award given to me from the Vice Chancellor of Clifford University in 2025"
+        data-sub="During the Vice Chancellor&rsquo;s awards ceremony in 2025, I was honoured to receive the Institutional Appreciation Award for my contributions to research and innovation at Clifford University. This recognition reflects my dedication to advancing knowledge and fostering a culture of excellence within the university community."
         onclick="openLightbox(2)">
+         <img src="images/institutional_award.jpeg"
+          alt="Conference talk 2024"
+          style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="gallery-placeholder">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-          <p>Team photo</p>
+          <p>Awards Photo</p>
         </div>
-        <div class="gallery-caption"><span>Research team, 2024</span></div>
+        <div class="gallery-caption"><span>A picture of me with the Institutional Appreciation Award given to me from the Vice Chancellor of Clifford University in 2025.
+        During the Vice Chancellor&rsquo;s awards ceremony in 2025, I was honoured to receive the Institutional Appreciation Award for my contributions to research and innovation at Clifford University. </span></div>
       </div>
 
       <div class="gallery-item reveal" data-index="3"
-        data-src="images/gallery-poster.jpg"
-        data-caption="ACM CCS 2023 — Poster"
-        data-sub="Presenting SparseFlowAttn at ML Security workshop"
+        data-src="images/manager.jpeg"
+        data-caption="Snapshot from a picture taken with my Manager( Proforce Intelligence Systems) during both his birthday and the unveiling 
+        of research team in Proforce Defence Company"
+        data-sub="This photo was taken during a significant event that combined the celebration of my manager's birthday with the unveiling of our research team at Proforce Defence Company. It captures a moment of camaraderie and excitement as we marked both a personal milestone and a professional achievement, highlighting the collaborative spirit and innovative drive within our team."
         onclick="openLightbox(3)">
+        <img src="images/manager.jpeg"
+          alt="Conference talk 2024"
+          style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="gallery-placeholder">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-          <p>Poster session</p>
+          <p></p>
         </div>
-        <div class="gallery-caption"><span>ACM CCS 2023 — Poster</span></div>
+        <div class="gallery-caption"><span>Snapshot from a picture taken with my Manager( Proforce Intelligence Systems) during both his birthday and the unveiling 
+        of research team in Proforce Defence Company</span></div>
       </div>
 
       <div class="gallery-item reveal" data-index="4"
-        data-src="images/gallery-hacklagos.jpg"
+        data-src="images/nacos_placeholder.jpeg"
         data-caption="HackLagos 2023"
         data-sub="Community hackathon & tech event"
         onclick="openLightbox(4)">
+         <img src="images/nacos_placeholder.jpeg"
+          alt="Conference talk 2024"
+          style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="gallery-placeholder">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
           <p>HackLagos event</p>
@@ -2323,57 +2393,55 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
         <div class="pub-item reveal">
           <div class="pub-icon pi-blog"><i data-lucide="search" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
-            <div class="pub-meta">Mar 2025 &middot; Cybersecurity</div>
-            <div class="pub-title">How Adversarial ML is Changing the Threat Landscape <span class="pub-badge pb-new">New</span></div>
-            <div class="pub-excerpt">Modern attackers craft inputs specifically to fool detection models. Here's what that means for defenders in 2025 and how to respond.</div>
-            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+            <div class="pub-meta">May 2025 &middot; Tech News Cache</div>
+            <div class="pub-title">Report says Microsoft engineers worked to create AI systems, then fired and replaced with same AI systems  <span class="pub-badge pb-new">New</span></div>
+            <div class="pub-excerpt">
+
+              Microsoft’s recent layoffs have hit software engineers the hardest, 
+              just as the company pushes aggressively into AI-driven coding. 
+              According to a CNBC report, the tech giant announced cuts affecting
+               roughly 6,000 employees globally. But internal data reveals a disturbing 
+               trend: over 40 per cent of the layoffs in Washington state targeted 
+               software engineers, as per a Bloomberg analysis.
+            </div>
+            <a href="https://chimenkagoodluck.blogspot.com/2025/05/report-says-microsoft-engineers-worked.html" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
           </div>
         </div>
         <div class="pub-item reveal">
           <div class="pub-icon pi-blog"><i data-lucide="git-merge" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
-            <div class="pub-meta">Jan 2025 &middot; AI / ML</div>
-            <div class="pub-title">Building a Federated Learning Pipeline from Scratch</div>
-            <div class="pub-excerpt">A practical walkthrough of implementing FedAvg with differential privacy using Flower and PyTorch, from local setup to production deployment.</div>
-            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+            <div class="pub-meta">May 2025 &middot; Software Development</div>
+            <div class="pub-title">Understanding Async, Await, and Promises in JavaScript: The Modern Approach to Asynchronous Programming </div>
+            <div class="pub-excerpt">
+              JavaScript runs in a single-threaded environment (i.e., one task at a time). Blocking operations like network requests or long computations can freeze the entire UI if not handled asynchronously.
+
+Imagine this scenario:
+
+const data = fetch('https://api.example.com/users');
+console.log(data); // Won’t work as expected!
+The fetch call is asynchronous—it returns a Promise. If we don’t handle it correctly, our code becomes unpredictable or breaks.
+            
+            </div>
+            <a href="https://chimenkagoodluck.blogspot.com/2025/05/understanding-async-await-and-promises.html" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
           </div>
         </div>
         <div class="pub-item reveal">
           <div class="pub-icon pi-blog"><i data-lucide="layout-grid" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
-            <div class="pub-meta">Nov 2024 &middot; Engineering</div>
-            <div class="pub-title">Why Your Microservices Are Secretly Monoliths</div>
-            <div class="pub-excerpt">Distributed systems antipatterns I've encountered in production, and how to decompose them correctly this time.</div>
-            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
+            <div class="pub-meta">May 2025 &middot; Human Resources</div>
+            <div class="pub-title">AI vs Human Creativity: Will Developers and Designers Be Replaced? </div>
+            <div class="pub-excerpt">
+                While the idea of AI-powered creativity might seem like a threat, a deeper dive reveals a more nuanced story, one filled with opportunity, collaboration, and a new wave of innovation.
+
+From tools like Open AI's ChatGPT and Adobe Firefly to GitHub Copilot and Canva's Magic Design, AI is now creating content, code, and visuals at incredible speeds. These tools are transforming workflows.
+
+              </div>
+            <a href="https://chimenkagoodluck.blogspot.com/2025/05/ai-vs-human-creativity-will-developers.html" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
           </div>
         </div>
-        <div class="pub-item reveal">
-          <div class="pub-icon pi-blog"><i data-lucide="key" width="18" height="18"></i></div>
-          <div style="flex:1;min-width:0;">
-            <div class="pub-meta">Sep 2024 &middot; Cybersecurity</div>
-            <div class="pub-title">Zero Trust Architecture: Beyond the Buzzword</div>
-            <div class="pub-excerpt">A grounded look at zero-trust in practice, with a reference implementation using SPIFFE/SPIRE and OPA.</div>
-            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
-          </div>
-        </div>
-        <div class="pub-item reveal">
-          <div class="pub-icon pi-blog"><i data-lucide="bar-chart-2" width="18" height="18"></i></div>
-          <div style="flex:1;min-width:0;">
-            <div class="pub-meta">Jul 2024 &middot; AI / ML</div>
-            <div class="pub-title">Evaluating LLMs for Code Security Analysis</div>
-            <div class="pub-excerpt">I tested leading models against 200 real CVE-adjacent code snippets. Here's what the numbers actually say.</div>
-            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
-          </div>
-        </div>
-        <div class="pub-item reveal">
-          <div class="pub-icon pi-blog"><i data-lucide="globe" width="18" height="18"></i></div>
-          <div style="flex:1;min-width:0;">
-            <div class="pub-meta">May 2024 &middot; Career</div>
-            <div class="pub-title">Building a Research Career from Lagos</div>
-            <div class="pub-excerpt">Navigating academic publishing, remote collaboration, and global tech opportunities without leaving home.</div>
-            <a href="#" class="pub-link"><i data-lucide="arrow-right" width="13" height="13"></i> Read post</a>
-          </div>
-        </div>
+        
+        
+       
       </div>
     </div>
 
@@ -2382,21 +2450,30 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
         <div class="pub-item reveal">
           <div class="pub-icon pi-stmt"><i data-lucide="megaphone" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
-            <div class="pub-meta">Feb 2025 &middot; Press statement &middot; TechCabal</div>
-            <div class="pub-title">Statement on AI Safety and Responsible Deployment in African Tech Ecosystems <span class="pub-badge pb-feat">Featured</span></div>
-            <div class="pub-excerpt">A public statement on the responsibilities of AI practitioners and institutions operating within emerging tech markets, co-authored with colleagues from the Lagos AI Society.</div>
-            <a href="#" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Read statement</a>
+            <div class="pub-meta">May 2025 &middot; Press statement &middot; JAMB Administration</div>
+            <div class="pub-title">Reflections on the 2025 JAMB UTME Technical Failures and the Imperative for a Cybersecurity and Infrastructure Overhaul  <span class="pub-badge pb-feat">Featured</span></div>
+            <div class="pub-excerpt">
+              
+             As a Nigerian citizen and a professional in Cyber Security with deep concern for the integrity and resilience of national digital systems, I find it necessary to address the unfolding issues surrounding the 2025 Unified Tertiary Matriculation Examination (UTME) administered by the Joint Admissions and Matriculation Board (JAMB). The series of failures reported in this year's CBT (Computer-Based Testing) exercise represents not only technical inefficiencies but also expose critical flaws in the design, implementation, 
+             and governance of high-stakes digital platforms in Nigeria’s educational landscape.
+            
+            </div>
+            <a href="https://chimenkagoodluck.blogspot.com/2025/05/reflections-on-2025-jamb-utme-technical.html" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Read statement</a>
           </div>
         </div>
         <div class="pub-item reveal">
           <div class="pub-icon pi-stmt"><i data-lucide="tv-2" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
-            <div class="pub-meta">Oct 2024 &middot; Interview &middot; Techpoint Africa</div>
-            <div class="pub-title">Interview: "Cybersecurity is Not an Afterthought — It's Architecture"</div>
-            <div class="pub-excerpt">A conversation with Techpoint Africa on why security must be baked into software design from day one, and what that looks like for African startups building at speed.</div>
-            <a href="#" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Read interview</a>
+            <div class="pub-meta">Jan 2026 &middot; National Issues &middot; Public Statement</div>
+            <div class="pub-title">COMMENT ON THE SENATE'S REFUSAL TO ALLOW REAL-TIME ELECTRONIC TRANSMISSION OF ELECTION RESULTS</div>
+            <div class="pub-excerpt">
+              Yesterday, I became aware of the recent developments regarding the electoral processes and laws. First and foremost, I will not hesitate to thank the National House of Representatives for passing important clauses and sections in the law that mandate real-time electronic transmission and other critical provisions. In the same vein, I learned that the Senate opted for a closed-door deliberation on an 
+              important national matter that citizens have been waiting for.
+              </div>
+            <a href="https://www.linkedin.com/posts/chimenkagoodluck_comment-on-the-senates-refusal-to-allow-activity-7425123695158996992-DOC2?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEGkgogBmzUpnFCvGPZNZEyVIY1GBCVHzXw" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Read statement</a>
           </div>
         </div>
+        <!---
         <div class="pub-item reveal">
           <div class="pub-icon pi-stmt"><i data-lucide="mic" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
@@ -2406,6 +2483,7 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
             <a href="#" class="pub-link"><i data-lucide="external-link" width="13" height="13"></i> Watch talk</a>
           </div>
         </div>
+        -->
       </div>
     </div>
 
@@ -2414,12 +2492,18 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
         <div class="pub-item reveal">
           <div class="pub-icon pi-doc"><i data-lucide="file-text" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
-            <div class="pub-meta">2025 &middot; White paper &middot; PDF · 28 pages</div>
-            <div class="pub-title">Threat Modelling for AI-Augmented Systems: A Practitioner's Guide <span class="pub-badge pb-new">New</span></div>
-            <div class="pub-excerpt">A comprehensive white paper covering threat modelling methodologies adapted for systems that incorporate machine learning components — covering data poisoning, model inversion, and adversarial inputs.</div>
-            <a href="#" class="pub-link"><i data-lucide="download" width="13" height="13"></i> Download PDF</a>
+            <div class="pub-meta">2025 &middot; Technical Report &middot; PDF · 4 pages</div>
+            <div class="pub-title">DEPARTMENT OF DIGITAL FORENSICS AND INCIDENT RESPONSE PROFORCE INTELLIGENT SYSTEMS Research Report: WhatsApp Cracking and live access to its data <span class="pub-badge pb-new">New</span></div>
+            <div class="pub-excerpt">
+              While working on this research area titled “WhatsApp Cracking and Live Access to Its Data”, I 
+examined whether it is technically feasible to obtain real-time or unauthorized access to 
+WhatsApp communications, the reasons this presents signiﬁcant challenges, and the 
+legitimate alternatives available for lawful digital investigations. 
+            </div>
+            <a href="https://www.academia.edu/164582508/DEPARTMENT_OF_DIGITAL_FORENSICS_AND_INCIDENT_RESPONSE_PROFORCE_INTELLIGENT_SYSTEMS_Research_Report_WhatsApp_Cracking_and_live_access_to_its_data?source=swp_share" class="pub-link"><i data-lucide="download" width="13" height="13"></i> Download PDF</a>
           </div>
         </div>
+         <!---
         <div class="pub-item reveal">
           <div class="pub-icon pi-doc"><i data-lucide="book-open" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
@@ -2429,6 +2513,7 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
             <a href="#" class="pub-link"><i data-lucide="download" width="13" height="13"></i> Download PDF</a>
           </div>
         </div>
+        
         <div class="pub-item reveal">
           <div class="pub-icon pi-doc"><i data-lucide="clipboard-list" width="18" height="18"></i></div>
           <div style="flex:1;min-width:0;">
@@ -2438,6 +2523,7 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
             <a href="#" class="pub-link"><i data-lucide="download" width="13" height="13"></i> Download PDF</a>
           </div>
         </div>
+        -->
       </div>
     </div>
 
@@ -2451,99 +2537,106 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
     <h2 class="section-h reveal">LinkedIn Posts</h2>
     <p class="section-sub reveal">Thoughts, updates, and insights shared on LinkedIn.</p>
 
-    <div class="li-note reveal">
-      <i data-lucide="info" width="16" height="16"></i>
-      <span>To embed a real post, replace <code>YOUR_POST_URL</code> in each card with the post's full LinkedIn URL. Each card links directly to the post on LinkedIn.</span>
-    </div>
+   
 
     <div class="li-grid">
       <div class="li-card reveal">
-        <div class="li-card-head">
-          <div class="li-avatar">CG</div>
-          <div>
-            <div class="li-name">Chimenka Goodluck</div>
-            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
-          </div>
-          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
-        </div>
-        <div class="li-embed-wrap">
-          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
-          <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7393951063109779457" height="1020" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
-          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-1</span>
-        </div>
-        <div class="li-card-foot">
-          <span class="li-date">Mar 2025</span>
-          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
-            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
-          </a>
-        </div>
-      </div>
+  <div class="li-card-head">
+    <div class="li-avatar">CG</div>
+    <div>
+      <div class="li-name">Chimenka Goodluck</div>
+      <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+    </div>
+    <div class="li-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+    </div>
+  </div>
+  <div class="li-embed-wrap" style="padding:0;min-height:unset;background:transparent;align-items:stretch;">
+    <iframe
+      src="https://www.linkedin.com/embed/feed/update/urn:li:share:7393951063109779457"
+      frameborder="0"
+      allowfullscreen
+      title="LinkedIn post by Chimenka Goodluck"
+      style="width:100%;min-height:420px;border:none;display:block;border-radius:0;">
+    </iframe>
+  </div>
+  <div class="li-card-foot">
+    <span class="li-date">Dec 2025</span>
+    <a href="https://www.linkedin.com/feed/update/urn:li:share:7393951063109779457" target="_blank" class="li-open">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> View on LinkedIn
+    </a>
+  </div>
+</div>
 
-      <div class="li-card reveal">
-        <div class="li-card-head">
-          <div class="li-avatar">CG</div>
-          <div>
-            <div class="li-name">Chimenka Goodluck</div>
-            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
-          </div>
-          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
-        </div>
-        <div class="li-embed-wrap">
-          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
-          <p class="li-placeholder-text">Paste your LinkedIn post URL here</p>
-          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-2</span>
-        </div>
-        <div class="li-card-foot">
-          <span class="li-date">Jan 2025</span>
-          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
-            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
-          </a>
-        </div>
-      </div>
+       <div class="li-card reveal">
+  <div class="li-card-head">
+    <div class="li-avatar">CG</div>
+    <div>
+      <div class="li-name">Chimenka Goodluck</div>
+      <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+    </div>
+    <div class="li-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+    </div>
+  </div>
+  <div class="li-embed-wrap" style="padding:0;min-height:unset;background:transparent;align-items:stretch;">
+    <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7388843624718856192" height="760" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+  </div>
+  <div class="li-card-foot">
+    <span class="li-date">Oct 2025</span>
+    <a href="https://www.linkedin.com/posts/chimenkagoodluck_ai-cybersecurity-digitalforensics-activity-7388843697876123648-0P4S?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEGkgogBmzUpnFCvGPZNZEyVIY1GBCVHzXw" target="_blank" class="li-open">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> View on LinkedIn
+    </a>
+  </div>
+</div>
 
-      <div class="li-card reveal">
-        <div class="li-card-head">
-          <div class="li-avatar">CG</div>
-          <div>
-            <div class="li-name">Chimenka Goodluck</div>
-            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
-          </div>
-          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
-        </div>
-        <div class="li-embed-wrap">
-          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
-          <p class="li-placeholder-text">Paste your LinkedIn post URL here</p>
-          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-3</span>
-        </div>
-        <div class="li-card-foot">
-          <span class="li-date">Nov 2024</span>
-          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
-            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
-          </a>
-        </div>
-      </div>
+  <div class="li-card reveal">
+  <div class="li-card-head">
+    <div class="li-avatar">CG</div>
+    <div>
+      <div class="li-name">Chimenka Goodluck</div>
+      <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+    </div>
+    <div class="li-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+    </div>
+  </div>
+  <div class="li-embed-wrap" style="padding:0;min-height:unset;background:transparent;align-items:stretch;">
+    <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7371094097429864449" height="1216" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+  </div>
+  <div class="li-card-foot">
+    <span class="li-date">Aug 2025</span>
+    <a href="https://www.linkedin.com/posts/chimenkagoodluck_cybersecurity-digitalforensics-incidentresponse-activity-7371094099585622017-8Zz_?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEGkgogBmzUpnFCvGPZNZEyVIY1GBCVHzXw" target="_blank" class="li-open">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> View on LinkedIn
+    </a>
+  </div>
+</div>
 
-      <div class="li-card reveal">
-        <div class="li-card-head">
-          <div class="li-avatar">CG</div>
-          <div>
-            <div class="li-name">Chimenka Goodluck</div>
-            <div class="li-handle">Software Engineer &amp; AI Researcher</div>
-          </div>
-          <div class="li-logo"><i data-lucide="linkedin" width="20" height="20"></i></div>
-        </div>
-        <div class="li-embed-wrap">
-          <i data-lucide="linkedin" width="36" height="36" class="li-placeholder-icon"></i>
-          <p class="li-placeholder-text">Paste your LinkedIn post URL here</p>
-          <span class="li-url-label">linkedin.com/posts/chimenkagoodluck_post-4</span>
-        </div>
-        <div class="li-card-foot">
-          <span class="li-date">Sep 2024</span>
-          <a href="https://linkedin.com/in/chimenkagoodluck" target="_blank" class="li-open">
-            <i data-lucide="external-link" width="13" height="13"></i> View on LinkedIn
-          </a>
-        </div>
-      </div>
+<div class="li-card reveal">
+  <div class="li-card-head">
+    <div class="li-avatar">CG</div>
+    <div>
+      <div class="li-name">Chimenka Goodluck</div>
+      <div class="li-handle">Software Engineer &amp; AI Researcher</div>
+    </div>
+    <div class="li-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+    </div>
+  </div>
+  <div class="li-embed-wrap" style="padding:0;min-height:unset;background:transparent;align-items:stretch;">
+
+    <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7330601559212404737" height="894" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+    </div>
+  <div class="li-card-foot">
+    <span class="li-date">Apr 2025</span>
+    <a href="https://www.linkedin.com/posts/chimenkagoodluck_reflections-on-the-2025-jamb-utme-technical-activity-7330601560730685440-X-Ec?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEGkgogBmzUpnFCvGPZNZEyVIY1GBCVHzXw" target="_blank" class="li-open">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> View on LinkedIn
+    </a>
+  </div>
+</div>
+      
+
+    
     </div>
 
     <div class="li-cta reveal">
@@ -2563,17 +2656,17 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
     <p class="section-sub reveal">Open to research collaborations, consulting, and full-time opportunities.</p>
     <div class="contact-grid">
       <div class="reveal-left">
-        <p class="contact-blurb">Whether you have an interesting problem, a research idea to explore, or just want to connect — my inbox is always open. I typically respond within 48 hours.</p>
+        <p class="contact-blurb">I am available for collaborations, project ideas, research, and educational opportunities. My inbox is always open, and I typically respond within 48 hours.</p>
         <div class="contact-channels">
           <a href="mailto:chimenka@example.com" class="c-channel">
             <div class="c-icon"><i data-lucide="mail" width="16" height="16"></i></div>
-            <div><div class="c-label">Email</div><div class="c-value">chimenka@example.com</div></div>
+            <div><div class="c-label">Email</div><div class="c-value">chimenkagoodluck@gmail.com</div></div>
           </a>
-          <a href="https://linkedin.com" target="_blank" class="c-channel">
-            <div class="c-icon"><i data-lucide="linkedin" width="16" height="16"></i></div>
+          <a href="https://linkedin.com/chimenkagoodluck" target="_blank" class="c-channel">
+            <div class="c-icon"><i data-lucide="Linkedin" width="16" height="16"></i></div>
             <div><div class="c-label">LinkedIn</div><div class="c-value">/in/chimenkagoodluck</div></div>
           </a>
-          <a href="https://github.com" target="_blank" class="c-channel">
+          <a href="https://github.com/chimenkagoodluck" target="_blank" class="c-channel">
             <div class="c-icon"><i data-lucide="github" width="16" height="16"></i></div>
             <div><div class="c-label">GitHub</div><div class="c-value">@chimenkagoodluck</div></div>
           </a>
@@ -2616,9 +2709,9 @@ The solution uses Django (Python) for the backend and JavaScript for the fronten
   <span class="foot-copy">© 2025 <em>Chimenka Goodluck</em>. All rights reserved.</span>
   <div class="foot-links">
     <a href="#hero"><i data-lucide="arrow-up" width="13" height="13"></i> Top</a>
-    <a href="https://github.com" target="_blank"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
+    <a href="https://github.com/chimenkagoodluck" target="_blank"><i data-lucide="github" width="13" height="13"></i> GitHub</a>
     <a href="https://twitter.com" target="_blank"><i data-lucide="twitter" width="13" height="13"></i> Twitter</a>
-    <a href="mailto:chimenka@example.com"><i data-lucide="mail" width="13" height="13"></i> Email</a>
+    <a href="mailto:chimenkagoodluck@gmail.com"><i data-lucide="mail" width="13" height="13"></i> Email</a>
   </div>
 </footer>
 
@@ -3172,5 +3265,6 @@ document.getElementById('lightbox')?.addEventListener('click', e=>{
 // Initialise gallery items once DOM ready
 buildGalleryItems();
 </script>
+<script src="script.js"></script>
 </body>
 </html>
